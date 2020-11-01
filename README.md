@@ -324,3 +324,5 @@ delete this.$options.sockets.onmessage
 至此，插件的所有使用方法就介绍完了。
 
 想进一步了解插件源码的请移步项目的GitHub仓库：[vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3)
+
+原插件代码地址：[vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)
