@@ -176,7 +176,7 @@ export default class {
         if (this.mutations) {
             target = this.mutations[target] || target;
         }
-        // 触发storm中的方法
+        // 触发store中的方法
         this.store[method](target, msg);
     }
 }
