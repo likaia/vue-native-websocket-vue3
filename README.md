@@ -1,4 +1,4 @@
-# vue-native-websocket-vue3
+# vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.0.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.0.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
 支持vue3和vuex的websocket插件
 
 ## 插件安装
