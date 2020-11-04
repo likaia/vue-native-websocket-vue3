@@ -1,3 +1,10 @@
+## 3.0.1 (2020-11-04)
+
+
+### Bug Fixes
+
+* **修复git commit规范不生效问题:** 使用新的包指定commit规范 ([93a7c1c](https://github.com/likaia/vue-native-websocket-vue3/commit/93a7c1c4a1a6c0ea3252e333e73b799364a1d169))
+
 # 3.0.0 (2020-10-29)
 
 
