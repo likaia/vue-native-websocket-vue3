@@ -1,4 +1,4 @@
-# vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.0.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.0.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
+# vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.2.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.2.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
 支持vue3和vuex的websocket插件 | Websocket plugin that supports vue 3 and vuex 
 
 English documents please move: [README-EN.md](README-EN.md)
@@ -226,6 +226,7 @@ app.use(VueNativeSock,"",{
 }
 ```
 启用手动管理连接后，项目启动时则不会自动连接，你可以在项目的特定组件调用连接方法来进行连接。在组件销毁时调用关闭方法来关闭连接。
+> 如果你启用了手动连接，必须要要启用vuex，否则此设置将不会生效。
 ```typescript
   // 连接websocket服务器，参数为websocket服务地址
   this.$connect("");

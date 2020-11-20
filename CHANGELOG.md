@@ -1,3 +1,11 @@
+## 3.0.2 (2020-11-20)
+
+
+### Bug Fixes
+
+* **修复部分类型错误:** 添加英文注释 | add English Comment ([a439a0a](https://github.com/likaia/vue-native-websocket-vue3/commit/a439a0a27a25fcb7823fe2d20d22c8f695aa979c))
+
+
 ## 3.0.1 (2020-11-04)
 
 
