@@ -1,8 +1,8 @@
-# vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.0.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.0.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
-支持vue3和vuex的websocket插件 | Websocket plugin that supports vue 3 and vuex 
+# vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.2.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.2.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
+Websocket plugin that supports vue 3 and vuex 
 
-English documents please move: [README-EN.md](README-EN.md)
-## 插件安装
+Chinese documents please move: [README.md](README.md)
+## Plug-in installation
 ```bash
 yarn add vue-native-websocket-vue3
 
@@ -11,25 +11,25 @@ yarn add vue-native-websocket-vue3
 npm install vue-native-websocket-vue3 --save
 ```
 
-## 插件使用
-如果你的项目启用了TypeScript，则在`main.ts`文件中导入并使用插件。
+## Plug-in use
+If Type Script is enabled in your project, import and use the plugin in the `main.ts` file.
 
-没有启用就在`main.js`中导入并使用。
+Import and use it in `main.js` if it is not enabled.
 
-使用插件时，第二个参数为必填项，是你的`websocket`服务端连接地址。
+When using the plug-in, the second parameter is required and is your `websocket` server connection address.
 
 ```typescript
 import VueNativeSock from "vue-native-websocket-vue3";
 
-// 使用VueNativeSock插件，并进行相关配置
+// Use the Vue Native Sock plug-in and perform related configuration
 app.use(VueNativeSock,"");
 ```
 
-### 插件配置项
-插件提供了一些配置选项，提高了插件的灵活度，能更好的适配开发者的业务需求。
+### Plug-in configuration items
+The plug-in provides some configuration options, which improves the flexibility of the plug-in and better adapts to the business needs of developers.
 
-#### 启用Vuex集成
-在`main.ts | main.js`中导入`vuex`，在使用插件时，第三个参数就是用户可以传配置项，他为一个对象类型，在对象中加入`store`属性，值为导入的vuex。
+#### Enable Vuex integration
+Import `vuex` in `main.ts | main.js`, when using the plug-in, the third parameter is that the user can pass the configuration item, he is an object type, add the `store` attribute to the object, the value is imported Vuex.
 
 ```typescript
 import store from "./store";
@@ -38,7 +38,7 @@ app.use(VueNativeSock,"",{
     store: store
 });
 ```
-如果启用了vuex集成，就需要在其配置文件中定义state以及mutations方法。mutations中定义的方法为websocket的6个监听，你可以在这几个监听中做相应的操作。
+If vuex integration is enabled, state and mutations methods need to be defined in its configuration file. The methods defined in mutations are 6 monitors of websocket, and you can do corresponding operations in these monitors.
 ```typescript
 import { createStore } from "vuex";
 import main from "../main";
@@ -46,26 +46,26 @@ import main from "../main";
 export default createStore({
   state: {
     socket: {
-      // 连接状态
+      // Connection Status
       isConnected: false,
-      // 消息内容
+      // Message content
       message: "",
-      // 重新连接错误
+      // Reconnect error
       reconnectError: false,
-      // 心跳消息发送时间
+      // Heartbeat message sending time
       heartBeatInterval: 50000,
-      // 心跳定时器
+      // Heartbeat timer
       heartBeatTimer: 0
     }
   },
   mutations: {
-    // 连接打开
+    // Connection open
     SOCKET_ONOPEN(state, event) {
       main.config.globalProperties.$socket = event.currentTarget;
       state.socket.isConnected = true;
-      // 连接成功时启动定时发送心跳消息，避免被服务器断开连接
+      // When the connection is successful, start sending heartbeat messages regularly to avoid being disconnected by the server
       state.socket.heartBeatTimer = setInterval(() => {
-        const message = "心跳消息";
+        const message = "Heartbeat message";
         state.socket.isConnected &&
           main.config.globalProperties.$socket.sendObj({
             code: 200,
@@ -73,28 +73,28 @@ export default createStore({
           });
       }, state.socket.heartBeatInterval);
     },
-    // 连接关闭
+    // Connection closed
     SOCKET_ONCLOSE(state, event) {
       state.socket.isConnected = false;
-      // 连接关闭时停掉心跳消息
+      // Stop the heartbeat message when the connection is closed
       clearInterval(state.socket.heartBeatTimer);
       state.socket.heartBeatTimer = 0;
-      console.log("连接已断开: " + new Date());
+      console.log("The line is disconnected: " + new Date());
       console.log(event);
     },
-    // 发生错误
+    // An error occurred
     SOCKET_ONERROR(state, event) {
       console.error(state, event);
     },
-    // 收到服务端发送的消息
+    // Receive the message sent by the server
     SOCKET_ONMESSAGE(state, message) {
       state.socket.message = message;
     },
-    // 自动重连
+    // Auto reconnect
     SOCKET_RECONNECT(state, count) {
       console.info("消息系统重连中...", state, count);
     },
-    // 重连错误
+    // Reconnect error
     SOCKET_RECONNECT_ERROR(state) {
       state.socket.reconnectError = true;
     }
@@ -102,8 +102,8 @@ export default createStore({
   modules: {}
 });
 ```
-##### 自定义方法名
-你也可以自定义`mutations`中自定义websocket的默认监听事件名。
+##### Custom method name
+You can also customize the default listener event name of custom websocket in `mutations`.
 ```typescript
 // mutation-types.ts
 const SOCKET_ONOPEN = '✅ Socket connected!'
@@ -194,23 +194,23 @@ app.use(VueNativeSock,"",{
 ```
 
 
-#### 其它配置
-> 下述方法，均为插件的可传参数，可以和`store`搭配使用
+#### Other configuration
+> The following methods are all passable parameters of the plug-in and can be used with `store`
 
-* 设置websocket子协议默，认为空字符串。
+* Set the websocket sub-protocol default, consider it as an empty string.
 ```json
 {
     "protocol": "my-protocol"
 }
 ```
-* 启用JSON消息传递，开启后数据发送与接收均采用json作为数据格式。
+* Enable JSON messaging. After enabling, data sending and receiving will use json as the data format.
 ```json
 { 
     "format": "json"
 }
 ```
 
-* 启用自动重连`reconnection`,启用时可配置重连次数`reconnectionAttempts`与重连间隔时长`reconnectionDelay`
+* Enable automatic reconnection `reconnection`, when enabled, you can configure the number of reconnections `reconnection Attempts` and the reconnection interval duration `reconnection Delay`
 ```json
 {
   "reconnection": true,
@@ -219,27 +219,28 @@ app.use(VueNativeSock,"",{
 }
 ```
 
-* 手动管理连接
+* Manually manage connections
 ```json
 {
   "connectManually": true
 }
 ```
-启用手动管理连接后，项目启动时则不会自动连接，你可以在项目的特定组件调用连接方法来进行连接。在组件销毁时调用关闭方法来关闭连接。
+After enabling manual connection management, the connection will not be automatically connected when the project starts. You can call the connection method on a specific component of the project to connect. Call the close method when the component is destroyed to close the connection.
+> If you enable manual connection, you must enable vuex, otherwise this setting will not take effect.
 ```typescript
-  // 连接websocket服务器，参数为websocket服务地址
+  // Connect to the websocket server, the parameter is the websocket service address
   this.$connect("");
-  // 关闭连接
+  // Close the connection
   this.$disconnect();
 ```
-* 自定义socket事件处理
-触发vuex里的mutations事件时，你可以选择自己写函数处理，做你想做的事情，在使用插件时传入`passToStoreHandler`参数即可，如果你没有传则走默认的处理函数，默认函数的定义如下: 
+* Custom socket event handling
+When triggering the mutations event in vuex, you can choose to write your own function processing, do what you want to do, pass in the `pass To Store Handler` parameter when using the plug-in, and if you don’t pass it, use the default processing function. The definition of the default function is as follows:
 ```typescript
 export default class {
     /**
-     * 默认的事件处理函数
-     * @param eventName 事件名称
-     * @param event 事件
+     * The default event handler
+     * @param eventName 
+     * @param event 
      */
     defaultPassToStore(
         eventName: string,
@@ -250,20 +251,20 @@ export default class {
             action: string;
         }
     ): void {
-        // 事件名称开头不是SOCKET_则终止函数
+        // If the beginning of the event name is not SOCKET_ then terminate the function
         if (!eventName.startsWith("SOCKET_")) {
             return;
         }
         let method = "commit";
-        // 事件名称字母转大写
+        // Turn the letter of the event name to uppercase
         let target = eventName.toUpperCase();
-        // 消息内容
+        // Message content
         let msg = event;
-        // data存在且数据为json格式
+        // data exists and the data is in json format
         if (this.format === "json" && event.data) {
-            // 将data从json字符串转为json对象
+            // Convert data from json string to json object
             msg = JSON.parse(event.data);
-            // 判断msg是同步还是异步
+            // Determine whether msg is synchronous or asynchronous
             if (msg.mutation) {
                 target = [msg.namespace || "", msg.mutation].filter((e: string) => !!e).join("/");
             } else if (msg.action) {
@@ -274,17 +275,17 @@ export default class {
         if (this.mutations) {
             target = this.mutations[target] || target;
         }
-        // 触发storm中的方法
+        // Trigger methods in storm
         this.store[method](target, msg);
     }
 }
 ```
-当你要自定义一个函数时，这个函数接收3个参数：
-* event name 事件名
-* event 事件
-* 默认事件处理，这使你可以选择将事件移交给原始处理程序之前进行一些基本的预处理
+When you want to customize a function, this function receives 3 parameters:
+* event name 
+* event 
+* Default event handling, which gives you the option to perform some basic preprocessing before handing over the event to the original handler
 
-下面是一个例子
+Below is an example
 ```typescript
 app.use(VueNativeSock, "", {
   passToStoreHandler: function (eventName, event, next) {
@@ -295,35 +296,35 @@ app.use(VueNativeSock, "", {
 ```
 
 
-### 在组件中使用
-做完上述配置后，就可以在组件中使用了，如下所示为发送数据的例子。
+### Use in components
+After finishing the above configuration, it can be used in the component. The following shows an example of sending data.
 ```typescript
 export default defineComponent({
   methods: {
     clickButton: function(val) {
-        // 调用send方法，以字符串形式发送数据
+        // Call the send method to send data as a string
         this.$socket.send('some data');
-        // 如果fomat配置为了json，即可调用sendObj方法来发送数据
+        // If fomat is configured as json, you can call the send Obj method to send data
         this.$socket.sendObj({ awesome: 'data'} );
     }
   }
 })
 ```
 
-消息监听，即接收websocket服务端推送的消息，如下所示为消息监听的示例代码。
+Message monitoring means receiving messages pushed by the websocket server. The sample code for message monitoring is shown below.
 ```typescript
 this.$options.sockets.onmessage = (res: { data: string }) => {
   console.log(data);
 }
 ```
-移除消息监听
+Remove message monitoring
 ```typescript
 delete this.$options.sockets.onmessage
 ```
 
-## 写在最后
-至此，插件的所有使用方法就介绍完了。
+## Write at the end
+So far, all the methods of using the plug-in have been introduced.
 
-想进一步了解插件源码的请移步项目的GitHub仓库：[vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3)
+If you want to know more about the plug-in source code, please move to the project's Git Hub repository：[vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3)
 
-原插件代码地址：[vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)
+Original plug-in code address: [vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)

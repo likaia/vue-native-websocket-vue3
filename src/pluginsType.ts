@@ -1,6 +1,6 @@
-// 插件内用到的类型进行统一定义
+// 插件内用到的类型进行统一定义 | Unified definition of the types used in the plugin
 
-// 传输数据时的处理函数类型定义
+// 传输数据时的处理函数类型定义 | Type definition of processing function when transferring data
 export type storeHandler<T = any> = (
     eventName: string,
     event: {
@@ -12,7 +12,7 @@ export type storeHandler<T = any> = (
     opts?: T
 ) => void;
 
-// 插件调用者可以传的参数类型定义
+// 插件调用者可以传的参数类型定义 | The parameter type definition that the plug-in caller can pass
 export type websocketOpts<T = any> = {
     format: string;
     reconnection?: boolean;
