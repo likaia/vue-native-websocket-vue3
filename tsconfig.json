@@ -1,33 +1,41 @@
 {
-  "exclude": [
-    "./node_modules"
-  ],
   "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": [
+      "webpack-env"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "declaration": true,// 是否生成声明文件
+    "declarationDir": "dist/lib",// 声明文件打包的位置
     "lib": [
       "esnext",
-      "dom"
-    ],
-    "baseUrl": "./",
-    "outDir": "./dist/", // 打包到的目录
-    "target": "ES2015", // 转换成的目标语言
-    "module": "esnext",
-    "declaration": true,// 是否生成声明文件
-    "declarationDir": "./dist/types/",// 声明文件打包的位置
-    "strict": true, // 开启严格模式
-    "sourceMap": true, // 便于浏览器调试
-    "moduleResolution": "node", // 使用node模块
-    "experimentalDecorators": true, // 使用装饰器
-    "skipLibCheck": true, // 跳过库检查
-    "esModuleInterop": true, // es模块互操作
-    "allowSyntheticDefaultImports": true, // 允许默认导入
-    "noImplicitAny": true, // 不能使用any
-    "noImplicitThis": true, // 不能使用this
-    "alwaysStrict": true, // 严格模式
-    "noUnusedLocals": true, // 不能有未使用的变量
-    "noUnusedParameters": true, // 不能有未使用的参数
-    "noImplicitReturns": true // 必须声明返回值
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
   },
   "include": [
-    "src/**/*.ts"
-  ]// 要打包的文件
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -313,7 +313,17 @@ export default defineComponent({
 
 消息监听，即接收websocket服务端推送的消息，如下所示为消息监听的示例代码。
 ```typescript
+// optionsAPI用法
 this.$options.sockets.onmessage = (res: { data: string }) => {
+  console.log(data);
+}
+
+// CompositionAPI用法
+import { getCurrentInstance } from "vue";
+const currentInstance = getCurrentInstance();
+(currentInstance?.appContext.config.globalProperties.sockets).onmessage = (res: {
+  data: string;
+}) => {
   console.log(data);
 }
 ```
