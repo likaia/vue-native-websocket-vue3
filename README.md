@@ -320,13 +320,27 @@ this.$options.sockets.onmessage = (res: { data: string }) => {
 
 // CompositionAPI用法
 import { getCurrentInstance } from "vue";
-const currentInstance = getCurrentInstance();
-(currentInstance?.appContext.config.globalProperties.sockets).onmessage = (res: {
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+proxy.$socket.onmessage = (res: {
   data: string;
 }) => {
   console.log(data);
 }
 ```
+
+发送消息，向服务端推送消息
+```typescript
+// optionsAPI用法
+this.$socket.sendObj({msg: '消息内容'});
+
+// compositionAPI写法
+const internalInstance = data.currentInstance;
+internalInstance?.proxy.$socket.sendObj({
+  msg: "消息内容"
+});
+```
+> compositionAPI写法由于在setup中无法拿到vue实例，因此需要在页面挂载后将实例存储到全局对象中，用的时候再将实例取出来。详细使用方法可以参考我的chat-system中的写法：[InitData.ts#L91](https://github.com/likaia/chat-system/blob/cacf587061f3a56198ade33a2c5bebeacec004a5/src/module/message-display/main-entrance/InitData.ts#L91) 、[EventMonitoring.ts#L50](https://github.com/likaia/chat-system/blob/db35173c8e54834a117ac8cb5a3753e75d9b1161/src/module/message-display/main-entrance/EventMonitoring.ts#L50) 、[SendMessage.ts#L73](https://github.com/likaia/chat-system/blob/db35173c8e54834a117ac8cb5a3753e75d9b1161/src/module/message-display/components-metords/SendMessage.ts#L73) 、[contact-list.vue#L620](https://github.com/likaia/chat-system/blob/91fe072a20d0928ff2af6c1bf56cedd0e545d0d5/src/views/contact-list.vue#L620)
+
 移除消息监听
 ```typescript
 delete this.$options.sockets.onmessage
