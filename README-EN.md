@@ -313,10 +313,35 @@ export default defineComponent({
 
 Message monitoring means receiving messages pushed by the websocket server. The sample code for message monitoring is shown below.
 ```typescript
+// optionsAPI
 this.$options.sockets.onmessage = (res: { data: string }) => {
   console.log(data);
 }
+
+// CompositionAPI
+import { getCurrentInstance } from "vue";
+const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+proxy.$socket.onmessage = (res: {
+  data: string;
+}) => {
+  console.log(data);
+}
 ```
+
+Send messages, push messages to the server
+```typescript
+// optionsAPI
+this.$socket.sendObj({msg: 'msgText'});
+
+// compositionAPI
+const internalInstance = data.currentInstance;
+internalInstance?.proxy.$socket.sendObj({
+  msg: "msgText"
+});
+```
+> The composition API is written because the vue instance cannot be obtained in the setup, so the instance needs to be stored in the global object after the page is mounted, and then the instance is taken out when it is used. For detailed usage, please refer to the writing in my chat-system: [InitData.ts#L91](https://github.com/likaia/chat-system/blob/cacf587061f3a56198ade33a2c5bebeacec004a5/src/module/message-display/main-entrance/InitData.ts#L91) 、[EventMonitoring.ts#L50](https://github.com/likaia/chat-system/blob/db35173c8e54834a117ac8cb5a3753e75d9b1161/src/module/message-display/main-entrance/EventMonitoring.ts#L50) 、[SendMessage.ts#L73](https://github.com/likaia/chat-system/blob/db35173c8e54834a117ac8cb5a3753e75d9b1161/src/module/message-display/components-metords/SendMessage.ts#L73) 、[contact-list.vue#L620](https://github.com/likaia/chat-system/blob/91fe072a20d0928ff2af6c1bf56cedd0e545d0d5/src/views/contact-list.vue#L620)
+
+
 Remove message monitoring
 ```typescript
 delete this.$options.sockets.onmessage
