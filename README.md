@@ -1,5 +1,5 @@
-# vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.2.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.2.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
-支持vue3和vuex的websocket插件 | Websocket plugin that supports vue 3 and vuex 
+# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.2-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.2-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
+仅支持vue3的websocket插件 | Only supports vue 3 websocket plugin 
 
 English documents please move: [README-EN.md](README-EN.md)
 ## 插件安装
@@ -351,4 +351,4 @@ delete this.$options.sockets.onmessage
 
 想进一步了解插件源码的请移步项目的GitHub仓库：[vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3)
 
-原插件代码地址：[vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)
+Vue2版本请移步原插件：[vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)

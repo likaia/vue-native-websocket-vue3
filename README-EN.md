@@ -1,5 +1,5 @@
 # vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.2.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.2.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
-Websocket plugin that supports vue 3 and vuex 
+Only supports vue 3 websocket plugin
 
 Chinese documents please move: [README.md](README.md)
 ## Plug-in installation
@@ -352,4 +352,4 @@ So far, all the methods of using the plug-in have been introduced.
 
 If you want to know more about the plug-in source code, please move to the project's Git Hub repository：[vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3)
 
-Original plug-in code address: [vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)
+Please move to the original plugin for Vue 2 version: [vue-native-websocket](https://github.com/nathantsoi/vue-native-websocket)
