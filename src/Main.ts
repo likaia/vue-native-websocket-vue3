@@ -1,6 +1,6 @@
 import Observer from "./socket-server/Observer";
 import Emitter from "./socket-server/Emitter";
-import { websocketOpts } from "@/type/PluginsType";
+import { websocketOpts } from "./type/PluginsType";
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { App } from "vue";
