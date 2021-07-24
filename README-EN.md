@@ -1,4 +1,4 @@
-# vue-native-websocket-vue3 &middot; [![npm version](assets/svg/npm-v3.0.2.svg)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](assets/svg/yarn-v3.0.2.svg)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
+# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.4-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.4-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
 Only supports vue 3 websocket plugin
 
 Chinese documents please move: [README.md](README.md)
