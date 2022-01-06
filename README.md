@@ -25,6 +25,8 @@ import VueNativeSock from "vue-native-websocket-vue3";
 app.use(VueNativeSock,"");
 ```
 
+> 注意：插件依赖于Vuex，你的项目一定要安装vuex才可以使用本插件。vuex的相关配置请查阅文档后面的插件配置项中的内容。
+
 ### 插件配置项
 插件提供了一些配置选项，提高了插件的灵活度，能更好的适配开发者的业务需求。
 
@@ -210,6 +212,8 @@ app.use(VueNativeSock,"",{
 }
 ```
 
+> 如果你没启用JSON消息传递，只能使用`send`方法来发送消息.
+
 * 启用自动重连`reconnection`,启用时可配置重连次数`reconnectionAttempts`与重连间隔时长`reconnectionDelay`
 ```json
 {
@@ -310,6 +314,8 @@ export default defineComponent({
   }
 })
 ```
+
+> 注意：`sendObj`方法必须在你启用JSON消息传递时才可以使用，不然只能使用`send`方法。
 
 消息监听，即接收websocket服务端推送的消息，如下所示为消息监听的示例代码。
 ```typescript
