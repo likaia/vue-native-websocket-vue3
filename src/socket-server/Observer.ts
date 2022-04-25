@@ -82,9 +82,9 @@ export default class {
     if (this.reconnectionCount <= this.reconnectionAttempts) {
       this.reconnectionCount++;
       // 清理上一次重连时的定时器 | Clear the timer of the last reconnection
-      clearTimeout(this.reconnectTimeoutId);
+      window.clearTimeout(this.reconnectTimeoutId);
       // 开始重连
-      this.reconnectTimeoutId = setTimeout(() => {
+      this.reconnectTimeoutId = window.setTimeout(() => {
         // 如果启用vuex就触发vuex中的重连方法 | If vuex is enabled, the reconnection method in vuex is triggered
         if (this.store) {
           this.passToStore("SOCKET_RECONNECT", this.reconnectionCount);
@@ -196,7 +196,14 @@ export default class {
       target = this.mutations[target] || target;
     }
     // 触发store中的方法 | Trigger the method in the store
-    this.store[method](target, msg);
+    if (this.store._p) {
+      // pinia
+      target = eventName.toUpperCase();
+      this.store[target](msg);
+    } else {
+      // vuex
+      this.store[method](target, msg);
+    }
   }
 }
 

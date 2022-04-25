@@ -1,5 +1,5 @@
 # vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.4-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.4-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
-仅支持vue3的websocket插件 | Only supports vue 3 websocket plugin 
+仅支持vue3的websocket插件 | Only supports vue 3 websocket plugin
 
 English documents please move: [README-EN.md](README-EN.md)
 ## 插件安装
@@ -195,6 +195,115 @@ app.use(VueNativeSock,"",{
 });
 ```
 
+#### 启用pinia集成
+在`main.js | main.ts`中导入`pinia`，使用插件传入导入的pinia。
+```typescript
+import { useSocketStoreWithOut } from './useSocketStore';
+
+const store = useSocketStoreWithOut();
+
+app.use(VueNativeSock, "", {
+    store: store
+});
+```
+还需要在配置文件中定义actions，由于pinia去除了mutations，因此这里的配置与vuex不同。
+```typescript
+import { defineStore } from 'pinia';
+import { store } from '/@/store';
+import main from '/@/main';
+
+interface SocketStore {
+  // 连接状态
+  isConnected: boolean;
+  // 消息内容
+  message: string;
+  // 重新连接错误
+  reconnectError: boolean;
+  // 心跳消息发送时间
+  heartBeatInterval: number;
+  // 心跳定时器
+  heartBeatTimer: number;
+}
+
+export const useSocketStore = defineStore({
+  id: 'socket',
+  state: (): SocketStore => ({
+    // 连接状态
+    isConnected: false,
+    // 消息内容
+    message: '',
+    // 重新连接错误
+    reconnectError: false,
+    // 心跳消息发送时间
+    heartBeatInterval: 50000,
+    // 心跳定时器
+    heartBeatTimer: 0,
+  }),
+  actions: {
+    // 连接打开
+    SOCKET_ONOPEN(event) {
+      main.config.globalProperties.$socket = event.currentTarget;
+      this.isConnected = true;
+      // 连接成功时启动定时发送心跳消息，避免被服务器断开连接
+      this.heartBeatTimer = window.setInterval(() => {
+        const message = '心跳消息';
+        this.isConnected &&
+          main.config.globalProperties.$socket.sendObj({
+            code: 200,
+            msg: message,
+          });
+      }, this.heartBeatInterval);
+    },
+    // 连接关闭
+    SOCKET_ONCLOSE(event) {
+      this.isConnected = false;
+      // 连接关闭时停掉心跳消息
+      window.clearInterval(this.heartBeatTimer);
+      this.heartBeatTimer = 0;
+      console.log('连接已断开: ' + new Date());
+      console.log(event);
+    },
+    // 发生错误
+    SOCKET_ONERROR(event) {
+      console.error(event);
+    },
+    // 收到服务端发送的消息
+    SOCKET_ONMESSAGE(message) {
+      this.message = message;
+    },
+    // 自动重连
+    SOCKET_RECONNECT(count) {
+      console.info('消息系统重连中...', count);
+    },
+    // 重连错误
+    SOCKET_RECONNECT_ERROR() {
+      this.reconnectError = true;
+    },
+  },
+});
+
+// Need to be used outside the setup
+export function useSocketStoreWithOut() {
+  return useSocketStore(store);
+}
+```
+
+为了方便在组件外面使用pinia，这里额外导出了`useSocketStoreWithOut`，否则pinia会报错，提示找不到pinia实例。
+
+引入的`store`代码如下：
+```typescript
+import type { App } from 'vue';
+import { createPinia } from 'pinia';
+
+const store = createPinia();
+
+export function setupStore(app: App<Element>) {
+  app.use(store);
+}
+
+export { store };
+```
+
 
 #### 其它配置
 > 下述方法，均为插件的可传参数，可以和`store`搭配使用
@@ -238,7 +347,7 @@ app.use(VueNativeSock,"",{
   this.$disconnect();
 ```
 * 自定义socket事件处理
-触发vuex里的mutations事件时，你可以选择自己写函数处理，做你想做的事情，在使用插件时传入`passToStoreHandler`参数即可，如果你没有传则走默认的处理函数，默认函数的定义如下: 
+  触发vuex里的mutations事件时，你可以选择自己写函数处理，做你想做的事情，在使用插件时传入`passToStoreHandler`参数即可，如果你没有传则走默认的处理函数，默认函数的定义如下:
 ```typescript
 export default class {
     /**
@@ -279,8 +388,15 @@ export default class {
         if (this.mutations) {
             target = this.mutations[target] || target;
         }
-        // 触发storm中的方法
-        this.store[method](target, msg);
+        // 触发store中的方法 | Trigger the method in the store
+        if (this.store._p) {
+          // pinia
+          target = eventName.toUpperCase();
+          this.store[target](msg);
+        } else {
+          // vuex
+          this.store[method](target, msg);
+        }
     }
 }
 ```
