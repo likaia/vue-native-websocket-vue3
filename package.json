@@ -1,11 +1,11 @@
 {
-  "name": "vue-native-websocket-vue3",
-  "version": "3.2.0",
+  "name": "vue3-native-websocket",
+  "version": "1.0.0",
   "description": "支持vue3和vuex、pinia的websocket插件",
   "main": "dist/vueNativeWebsocket.common.js",
   "types": "dist/lib/main.d.ts",
   "private": false,
-  "publisher": "magicalprogrammer@qq.com",
+  "publisher": "chuck.qukun@gmail.com",
   "scripts": {
     "build": "vue-cli-service build --target lib --name vueNativeWebsocket src/Main.ts",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/likaia/vue-native-websocket-vue3.git"
+    "url": "git+https://github.com/FrontToEnd/vue-native-websocket-vue3.git"
   },
   "keywords": [
     "vuejs",
@@ -23,14 +23,14 @@
     "realtime",
     "flux",
     "vuex",
-    "redux"
+    "pinia"
   ],
-  "author": "likaia",
+  "author": "chuck",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/likaia/vue-native-websocket-vue3/issues"
+    "url": "https://github.com/FrontToEnd/vue-native-websocket-vue3/issues"
   },
-  "homepage": "https://github.com/likaia/vue-native-websocket-vue3#readme",
+  "homepage": "https://github.com/FrontToEnd/vue-native-websocket-vue3#readme",
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-angular": "^11.0.0",
@@ -70,5 +70,8 @@
   },
   "dependencies": {
     "file-entry-cache": "^6.0.1"
-  }
+  },
+  "files": [
+    "dist",
+  ]
 }

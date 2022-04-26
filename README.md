@@ -1,7 +1,12 @@
-# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.4-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.4-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
+# vue-native-websocket-vue3
 仅支持vue3的websocket插件 | Only supports vue 3 websocket plugin
 
 English documents please move: [README-EN.md](README-EN.md)
+
+本插件改造自[vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3)，如果项目使用Vuex，建议使用原插件。
+
+本插件仅做了支持Pinia的兼容处理。
+
 ## 插件安装
 ```bash
 yarn add vue-native-websocket-vue3
