@@ -72,6 +72,6 @@
     "file-entry-cache": "^6.0.1"
   },
   "files": [
-    "dist",
+    "dist"
   ]
 }
