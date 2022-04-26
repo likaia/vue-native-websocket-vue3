@@ -1,5 +1,5 @@
-# vue-native-websocket-vue3
-Only supports vue 3 websocket plugin
+# vue3-native-websocket
+Only supports vue3 websocket plugin
 
 Chinese documents please move: [README.md](README.md)
 
@@ -9,11 +9,7 @@ This plugin is only made to support Pinia compatibility processing.
 
 ## Plug-in installation
 ```bash
-yarn add vue-native-websocket-vue3
-
-# or
-
-npm install vue-native-websocket-vue3 --save
+npm install vue3-native-websocket --save
 ```
 
 ## Plug-in use
@@ -24,7 +20,7 @@ Import and use it in `main.js` if it is not enabled.
 When using the plug-in, the second parameter is required and is your `websocket` server connection address.
 
 ```typescript
-import VueNativeSock from "vue-native-websocket-vue3";
+import VueNativeSock from "vue3-native-websocket";
 
 // Use the Vue Native Sock plug-in and perform related configuration
 app.use(VueNativeSock,"");
