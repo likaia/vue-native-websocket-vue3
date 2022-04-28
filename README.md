@@ -1,18 +1,18 @@
-# vue3-native-websocket
+# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.5-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.5-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3)
 仅支持vue3的websocket插件 | Only supports vue3 websocket plugin
 
 English documents please move: [README-EN.md](README-EN.md)
 
-本插件改造自[vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3)，如果项目使用Vuex，建议使用原插件。
-
-本插件仅做了支持Pinia的兼容处理。
+对Pinia进行兼容处理（感谢[@chuck](https://github.com/FrontToEnd)所提供的兼容代码）
 
 ## 插件安装
-
 ```bash
-npm install vue3-native-websocket --save
-```
+yarn add vue-native-websocket-vue3
 
+# or
+
+npm install vue-native-websocket-vue3 --save
+```
 ## 插件使用
 如果你的项目启用了TypeScript，则在`main.ts`文件中导入并使用插件。
 
@@ -21,7 +21,7 @@ npm install vue3-native-websocket --save
 使用插件时，第二个参数为必填项，是你的`websocket`服务端连接地址。
 
 ```typescript
-import VueNativeSock from "vue3-native-websocket";
+import VueNativeSock from "vue-native-websocket-vue3";
 
 // 使用VueNativeSock插件，并进行相关配置
 app.use(VueNativeSock,"");
