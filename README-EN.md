@@ -1,14 +1,15 @@
-# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.4-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.4-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3) [![github depositary](assets/svg/GitHub-depositary.svg)](https://github.com/likaia/vue-native-websocket-vue3)
-Only supports vue 3 websocket plugin
+# vue3-native-websocket
+Only supports vue3 websocket plugin
 
 Chinese documents please move: [README.md](README.md)
+
+This plugin is transformed from [vue-native-websocket-vue3](https://github.com/likaia/vue-native-websocket-vue3), if the project uses Vuex, it is recommended to use the original plugin.
+
+This plugin is only made to support Pinia compatibility processing.
+
 ## Plug-in installation
 ```bash
-yarn add vue-native-websocket-vue3
-
-# or
-
-npm install vue-native-websocket-vue3 --save
+npm install vue3-native-websocket --save
 ```
 
 ## Plug-in use
@@ -19,7 +20,7 @@ Import and use it in `main.js` if it is not enabled.
 When using the plug-in, the second parameter is required and is your `websocket` server connection address.
 
 ```typescript
-import VueNativeSock from "vue-native-websocket-vue3";
+import VueNativeSock from "vue3-native-websocket";
 
 // Use the Vue Native Sock plug-in and perform related configuration
 app.use(VueNativeSock,"");
@@ -92,7 +93,7 @@ export default createStore({
     },
     // Auto reconnect
     SOCKET_RECONNECT(state, count) {
-      console.info("消息系统重连中...", state, count);
+      console.info("Message system reconnecting...", state, count);
     },
     // Reconnect error
     SOCKET_RECONNECT_ERROR(state) {
@@ -194,6 +195,115 @@ app.use(VueNativeSock,"",{
 ```
 
 
+#### Enable Pinia integration
+Import `pinia` in `main.ts | main.js`，use the plugin to pass in the imported pinia。
+```typescript
+import { useSocketStoreWithOut } from './useSocketStore';
+
+const store = useSocketStoreWithOut();
+
+app.use(VueNativeSock, "", {
+    store: store
+});
+```
+You also need to define actions in the configuration file. Since pinia removes mutations, the configuration here is different from vuex.
+```typescript
+import { defineStore } from 'pinia';
+import { store } from '/@/store';
+import main from '/@/main';
+
+interface SocketStore {
+  // Connection Status
+  isConnected: boolean;
+  // Message content
+  message: string;
+  // Reconnect error
+  reconnectError: boolean;
+  // Heartbeat message sending time
+  heartBeatInterval: number;
+  // Heartbeat timer
+  heartBeatTimer: number;
+}
+
+export const useSocketStore = defineStore({
+  id: 'socket',
+  state: (): SocketStore => ({
+    // Connection Status
+    isConnected: false,
+    // Message content
+    message: '',
+    // Reconnect error
+    reconnectError: false,
+    // Heartbeat message sending time
+    heartBeatInterval: 50000,
+    // Heartbeat timer
+    heartBeatTimer: 0,
+  }),
+  actions: {
+    // Connection open
+    SOCKET_ONOPEN(event) {
+      main.config.globalProperties.$socket = event.currentTarget;
+      this.isConnected = true;
+      // When the connection is successful, start sending heartbeat messages regularly to avoid being disconnected by the server
+      this.heartBeatTimer = window.setInterval(() => {
+        const message = 'Heartbeat message';
+        this.isConnected &&
+          main.config.globalProperties.$socket.sendObj({
+            code: 200,
+            msg: message,
+          });
+      }, this.heartBeatInterval);
+    },
+    // Connection closed
+    SOCKET_ONCLOSE(event) {
+      this.isConnected = false;
+      // Stop the heartbeat message when the connection is closed
+      window.clearInterval(this.heartBeatTimer);
+      this.heartBeatTimer = 0;
+      console.log('The line is disconnected: ' + new Date());
+      console.log(event);
+    },
+    // An error occurred
+    SOCKET_ONERROR(event) {
+      console.error(event);
+    },
+    // Receive the message sent by the server
+    SOCKET_ONMESSAGE(message) {
+      this.message = message;
+    },
+    // Auto reconnect
+    SOCKET_RECONNECT(count) {
+      console.info('Message system reconnecting...', count);
+    },
+    // Reconnect error
+    SOCKET_RECONNECT_ERROR() {
+      this.reconnectError = true;
+    },
+  },
+});
+
+// Need to be used outside the setup
+export function useSocketStoreWithOut() {
+  return useSocketStore(store);
+}
+```
+
+In order to facilitate the use of pinia outside the component, useSocketStoreWithOut is additionally exported here, otherwise pinia will report an error indicating that the pinia instance cannot be found.
+
+The introduced `store` code is as follows:
+```typescript
+import type { App } from 'vue';
+import { createPinia } from 'pinia';
+
+const store = createPinia();
+
+export function setupStore(app: App<Element>) {
+  app.use(store);
+}
+
+export { store };
+```
+
 #### Other configuration
 > The following methods are all passable parameters of the plug-in and can be used with `store`
 
@@ -234,50 +344,57 @@ After enabling manual connection management, the connection will not be automati
   this.$disconnect();
 ```
 * Custom socket event handling
-When triggering the mutations event in vuex, you can choose to write your own function processing, do what you want to do, pass in the `pass To Store Handler` parameter when using the plug-in, and if you don’t pass it, use the default processing function. The definition of the default function is as follows:
+  When triggering the mutations event in vuex, you can choose to write your own function processing, do what you want to do, pass in the `pass To Store Handler` parameter when using the plug-in, and if you don’t pass it, use the default processing function. The definition of the default function is as follows:
 ```typescript
 export default class {
-    /**
-     * The default event handler
-     * @param eventName 
-     * @param event 
-     */
-    defaultPassToStore(
-        eventName: string,
-        event: {
-            data: string;
-            mutation: string;
-            namespace: string;
-            action: string;
-        }
-    ): void {
-        // If the beginning of the event name is not SOCKET_ then terminate the function
-        if (!eventName.startsWith("SOCKET_")) {
-            return;
-        }
-        let method = "commit";
-        // Turn the letter of the event name to uppercase
-        let target = eventName.toUpperCase();
-        // Message content
-        let msg = event;
-        // data exists and the data is in json format
-        if (this.format === "json" && event.data) {
-            // Convert data from json string to json object
-            msg = JSON.parse(event.data);
-            // Determine whether msg is synchronous or asynchronous
-            if (msg.mutation) {
-                target = [msg.namespace || "", msg.mutation].filter((e: string) => !!e).join("/");
-            } else if (msg.action) {
-                method = "dispatch";
-                target = [msg.namespace || "", msg.action].filter((e: string) => !!e).join("/");
-            }
-        }
-        if (this.mutations) {
-            target = this.mutations[target] || target;
-        }
-        // Trigger methods in storm
-        this.store[method](target, msg);
+  /**
+   * The default event handler
+   * @param eventName
+   * @param event
+   */
+  defaultPassToStore(
+    eventName: string,
+    event: {
+      data: string;
+      mutation: string;
+      namespace: string;
+      action: string;
     }
+  ): void {
+    // If the beginning of the event name is not SOCKET_ then terminate the function
+    if (!eventName.startsWith("SOCKET_")) {
+      return;
+    }
+    let method = "commit";
+    // Turn the letter of the event name to uppercase
+    let target = eventName.toUpperCase();
+    // Message content
+    let msg = event;
+    // data exists and the data is in json format
+    if (this.format === "json" && event.data) {
+      // Convert data from json string to json object
+      msg = JSON.parse(event.data);
+      // Determine whether msg is synchronous or asynchronous
+      if (msg.mutation) {
+        target = [msg.namespace || "", msg.mutation].filter((e: string) => !!e).join("/");
+      } else if (msg.action) {
+        method = "dispatch";
+        target = [msg.namespace || "", msg.action].filter((e: string) => !!e).join("/");
+      }
+    }
+    if (this.mutations) {
+      target = this.mutations[target] || target;
+    }
+    // Trigger methods in storm
+    if (this.store._p) {
+      // pinia
+      target = eventName.toUpperCase();
+      this.store[target](msg);
+    } else {
+      // vuex
+      this.store[method](target, msg);
+    }
+  }
 }
 ```
 When you want to customize a function, this function receives 3 parameters:
