@@ -1,4 +1,4 @@
-# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.5-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.5-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3)
+# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.6-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.6-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3)
 仅支持vue3的websocket插件 | Only supports vue3 websocket plugin
 
 English documents please move: [README-EN.md](README-EN.md)
@@ -28,12 +28,14 @@ app.use(VueNativeSock,"");
 ```
 
 > 注意：插件依赖于Vuex，你的项目一定要安装vuex才可以使用本插件。vuex的相关配置请查阅文档后面的插件配置项中的内容。
+ 
+> 同样的，插件也支持pinia，vuex与pinia任选其一即可。pinia的相关使用配置请请查阅文档后面的插件配置项中的内容。
 
 ### 插件配置项
 插件提供了一些配置选项，提高了插件的灵活度，能更好的适配开发者的业务需求。
 
 #### 启用Vuex集成
-在`main.ts | main.js`中导入`vuex`，在使用插件时，第三个参数就是用户可以传配置项，他为一个对象类型，在对象中加入`store`属性，值为导入的vuex。
+在`main.ts | main.js`中导入`vuex`的配置文件，在使用插件时，第三个参数就是用户可以传配置项，他为一个对象类型，在对象中加入`store`属性，值为导入的vuex。
 
 ```typescript
 import store from "./store";
@@ -42,6 +44,8 @@ app.use(VueNativeSock,"",{
     store: store
 });
 ```
+> 如果你仍然不知道怎么用，可以去参考我的另一个开源项目[chat-system](https://github.com/likaia/chat-system/blob/master/src/main.ts)。
+
 如果启用了vuex集成，就需要在其配置文件中定义state以及mutations方法。mutations中定义的方法为websocket的6个监听，你可以在这几个监听中做相应的操作。
 ```typescript
 import { createStore } from "vuex";
@@ -171,7 +175,7 @@ export default createStore({
   modules: {}
 });
 
-// index.js
+// main.ts
 import store from './store'
 import {
   SOCKET_ONOPEN,
@@ -198,8 +202,9 @@ app.use(VueNativeSock,"",{
 ```
 
 #### 启用pinia集成
-在`main.js | main.ts`中导入`pinia`，使用插件传入导入的pinia。
+在`main.js | main.ts`中导入`pinia`的配置文件。
 ```typescript
+// useSocketStore为pinia的socket配置文件
 import { useSocketStoreWithOut } from './useSocketStore';
 
 const store = useSocketStoreWithOut();
@@ -208,7 +213,9 @@ app.use(VueNativeSock, "", {
     store: store
 });
 ```
-还需要在配置文件中定义actions，由于pinia去除了mutations，因此这里的配置与vuex不同。
+> 我专门写了一个demo用来演示pinia的集成，如果你需要参考的话请移步：[pinia-websocket-project](https://github.com/likaia/pinia-websocket-project)
+
+pinia的socket配置文件代码如下：
 ```typescript
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
@@ -292,7 +299,7 @@ export function useSocketStoreWithOut() {
 
 为了方便在组件外面使用pinia，这里额外导出了`useSocketStoreWithOut`，否则pinia会报错，提示找不到pinia实例。
 
-引入的`store`代码如下：
+pinia的store配置代码如下：
 ```typescript
 import type { App } from 'vue';
 import { createPinia } from 'pinia';
@@ -347,6 +354,10 @@ export { store };
   this.$connect("");
   // 关闭连接
   this.$disconnect();
+
+  // CompositionAPI
+  proxy.$connect("");
+  proxy.$disconnect("");
 ```
 * 自定义socket事件处理
   触发vuex里的mutations事件时，你可以选择自己写函数处理，做你想做的事情，在使用插件时传入`passToStoreHandler`参数即可，如果你没有传则走默认的处理函数，默认函数的定义如下:
@@ -417,6 +428,14 @@ app.use(VueNativeSock, "", {
 })
 ```
 
+### 插件暴露的函数
+* `send` 发送非json类型的数据（使用插件时不能启用JSON消息传递）
+* `sendObj` 发送json类型的数据（必须在使用插件时启用JSON消息传递）
+* `$connect` 连接websocket服务器（必须在使用插件时启用手动管理连接选项）
+* `onmessage` 收到服务端推送消息时的监听
+* `$disconnect` 断开websocket连接
+
+> 注意：上述方法均支持在optionsAPI与CompositionAPI中使用，具体的用法请查阅相关函数的文档。
 
 ### 在组件中使用
 做完上述配置后，就可以在组件中使用了，如下所示为发送数据的例子。
@@ -433,7 +452,7 @@ export default defineComponent({
 })
 ```
 
-> 注意：`sendObj`方法必须在你启用JSON消息传递时才可以使用，不然只能使用`send`方法。
+> 注意：`sendObj`方法必须在你启用JSON消息传递时才可以使用，不然只能使用`send`方法。 
 
 消息监听，即接收websocket服务端推送的消息，如下所示为消息监听的示例代码。
 ```typescript
@@ -468,6 +487,8 @@ internalInstance?.proxy.$socket.sendObj({
 移除消息监听
 ```typescript
 delete this.$options.sockets.onmessage
+// compositionAPI写法
+delete proxy.$socket.onmessage
 ```
 
 ## 写在最后

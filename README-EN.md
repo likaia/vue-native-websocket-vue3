@@ -1,4 +1,4 @@
-# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.5-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.5-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3)
+# vue-native-websocket-vue3 &middot; [![npm version](https://img.shields.io/badge/npm-v3.1.6-2081C1)](https://www.npmjs.com/package/vue-native-websocket-vue3) [![yarn version](https://img.shields.io/badge/yarn-v3.1.6-F37E42)](https://classic.yarnpkg.com/zh-Hans/package/vue-native-websocket-vue3)
 Only supports vue3 websocket plugin
 
 Chinese documents please move: [README.md](README.md)
@@ -30,11 +30,15 @@ import VueNativeSock from "vue-native-websocket-vue3";
 app.use(VueNativeSock,"");
 ```
 
+> payAttention：The plugin depends on Vuex, your project must install vuex to use this plugin. For the relevant configuration of vuex, please refer to the content in the plug-in configuration item at the back of the document.
+
+> Similarly, the plugin also supports pinia, you can choose one of vuex and pinia. Please refer to the content in the plug-in configuration item at the back of the document for the related usage configuration of pinia.
+
 ### Plug-in configuration items
 The plug-in provides some configuration options, which improves the flexibility of the plug-in and better adapts to the business needs of developers.
 
 #### Enable Vuex integration
-Import `vuex` in `main.ts | main.js`, when using the plug-in, the third parameter is that the user can pass the configuration item, he is an object type, add the `store` attribute to the object, the value is imported Vuex.
+Import the configuration file of `vuex` in `main.ts | main.js`. When using the plug-in, the third parameter is that the user can pass the configuration item. It is an object type, and the `store` attribute is added to the object. Value is imported vuex.
 
 ```typescript
 import store from "./store";
@@ -43,6 +47,8 @@ app.use(VueNativeSock,"",{
     store: store
 });
 ```
+> If you still don't know how to use it, you can refer to my other open source project[chat-system](https://github.com/likaia/chat-system/blob/master/src/main.ts)。 
+
 If vuex integration is enabled, state and mutations methods need to be defined in its configuration file. The methods defined in mutations are 6 monitors of websocket, and you can do corresponding operations in these monitors.
 ```typescript
 import { createStore } from "vuex";
@@ -172,7 +178,7 @@ export default createStore({
   modules: {}
 });
 
-// index.js
+// main.js
 import store from './store'
 import {
   SOCKET_ONOPEN,
@@ -200,8 +206,9 @@ app.use(VueNativeSock,"",{
 
 
 #### Enable Pinia integration
-Import `pinia` in `main.ts | main.js`，use the plugin to pass in the imported pinia。
+Import `pinia`'s configuration file in `main.js|main.ts`.
 ```typescript
+// use Socket Store is pinia's socket configuration file
 import { useSocketStoreWithOut } from './useSocketStore';
 
 const store = useSocketStoreWithOut();
@@ -210,7 +217,9 @@ app.use(VueNativeSock, "", {
     store: store
 });
 ```
-You also need to define actions in the configuration file. Since pinia removes mutations, the configuration here is different from vuex.
+> I specially wrote a demo to demonstrate the integration of pinia, if you need a reference, please go to: [pinia-websocket-project](https://github.com/likaia/pinia-websocket-project)
+
+The code of pinia's socket configuration file is as follows:
 ```typescript
 import { defineStore } from 'pinia';
 import { store } from '/@/store';
@@ -294,7 +303,7 @@ export function useSocketStoreWithOut() {
 
 In order to facilitate the use of pinia outside the component, useSocketStoreWithOut is additionally exported here, otherwise pinia will report an error indicating that the pinia instance cannot be found.
 
-The introduced `store` code is as follows:
+The store configuration code of pinia is as follows:
 ```typescript
 import type { App } from 'vue';
 import { createPinia } from 'pinia';
@@ -346,6 +355,10 @@ After enabling manual connection management, the connection will not be automati
   this.$connect("");
   // Close the connection
   this.$disconnect();
+  
+  // CompositionAPI
+  proxy.$connect("");
+  proxy.$disconnect("");
 ```
 * Custom socket event handling
   When triggering the mutations event in vuex, you can choose to write your own function processing, do what you want to do, pass in the `pass To Store Handler` parameter when using the plug-in, and if you don’t pass it, use the default processing function. The definition of the default function is as follows:
@@ -416,6 +429,14 @@ app.use(VueNativeSock, "", {
 })
 ```
 
+### functions exposed by the plugin
+* `send` Send non-json type data (JSON messaging cannot be enabled when using plugins)
+* `sendObj` Send data of type json (JSON messaging must be enabled when using the plugin)
+* `$connect` Connect to the websocket server (manually manage connections option must be enabled when using the plugin)
+* `onmessage` listening when receiving server push messages
+* `$disconnect` disconnectWebsocketConnection
+
+> payAttention: The above methods are supported in the options API and Composition API. For specific usage, please refer to the documentation of the related functions.
 
 ### Use in components
 After finishing the above configuration, it can be used in the component. The following shows an example of sending data.
@@ -466,6 +487,8 @@ internalInstance?.proxy.$socket.sendObj({
 Remove message monitoring
 ```typescript
 delete this.$options.sockets.onmessage
+// compositionAPI  writing
+delete proxy.$socket.onmessage
 ```
 
 ## Write at the end
