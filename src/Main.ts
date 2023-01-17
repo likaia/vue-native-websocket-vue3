@@ -42,6 +42,8 @@ export default {
         if (observer && observer.reconnection) {
           // 重新连接状态改为false | Change the reconnection status to false
           observer.reconnection = false;
+          // 移除重新连接计时器 | Remove the reconnection timer
+          clearTimeout(observer.reconnectTimeoutId);
         }
         // 如果全局属性socket存在则从全局属性移除 | If the global attribute socket exists, remove it from the global attribute
         if (app.config.globalProperties.$socket) {
