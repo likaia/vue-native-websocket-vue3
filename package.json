@@ -1,6 +1,6 @@
 {
   "name": "vue-native-websocket-vue3",
-  "version": "3.1.6",
+  "version": "3.1.7",
   "description": "支持vue3和vuex、pinia的websocket插件",
   "main": "dist/vueNativeWebsocket.common.js",
   "types": "dist/lib/main.d.ts",
