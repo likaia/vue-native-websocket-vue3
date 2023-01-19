@@ -8,7 +8,7 @@ export default class {
   public reconnection: boolean; // 是否开启重连 | Whether to enable reconnection
   private readonly reconnectionAttempts: number; // 最大重连次数 | Maximum number of reconnections
   private readonly reconnectionDelay: number; // 重连间隔时间 | Reconnection interval
-  private reconnectTimeoutId = 0; // 重连超时id | Reconnect timeout id
+  public reconnectTimeoutId = 0; // 重连超时id | Reconnect timeout id
   private reconnectionCount = 0; // 已重连次数 | Reconnected times
   private readonly passToStoreHandler: any; // 传输数据时的处理函数 | Processing function when transferring data
   private readonly store: any; // 启用vuex时传入vuex的store | Pass in vuex store when vuex is enabled
