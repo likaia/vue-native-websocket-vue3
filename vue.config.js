@@ -15,5 +15,7 @@ module.exports = {
         });
     }
   },
-  parallel: false
+  parallel: false,
+  // 禁用生产环境的 Source Map 文件
+  productionSourceMap: false
 };
